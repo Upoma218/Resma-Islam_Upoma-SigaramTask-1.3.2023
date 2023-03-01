@@ -16,20 +16,27 @@ function Box({ index, handleClick, color }) {
 
 const Matrix = () => {
     const [matrix, setMatrix] = useState(Array(16).fill(false));
+    const [redBoxIndices, setRedBoxIndices] = useState([]);
 
     const handleClick = (index) => {
-        const updatedBoxes = [...matrix];
+        let updatedRedBoxIndices;
 
-        const redBoxCount = updatedBoxes.filter((b) => b).length;
-
-        if (redBoxCount >= 2) {
-            const firstRedBoxIndex = updatedBoxes.indexOf(true);
-            updatedBoxes[firstRedBoxIndex] = false;
+        if (redBoxIndices.includes(index)) {
+            updatedRedBoxIndices = redBoxIndices.filter((i) => i !== index);
+        } else {
+            updatedRedBoxIndices = redBoxIndices.slice(-1);
+            updatedRedBoxIndices.push(index);
         }
 
-        updatedBoxes[index] = true;
+        setRedBoxIndices(updatedRedBoxIndices);
 
-        setMatrix(updatedBoxes);
+        const updatedMatrix = matrix.map((value, i) =>
+            updatedRedBoxIndices.includes(i)
+                ? true 
+                : false 
+        );
+
+        setMatrix(updatedMatrix);
     };
 
     return (
